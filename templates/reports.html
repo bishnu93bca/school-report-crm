@@ -1,0 +1,679 @@
+{% extends "header.html" %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+            <!-- Main content area -->
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-4">
+                <!-- Action bar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Report Management</h3>
+                        <p class="text-sm text-gray-500">Manage all your report in one place</p>
+
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="{{ url_for('export_reports_excel') }}"
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 shadow">
+                          <i class="fas fa-file-excel"></i> Export to Excel
+                        </a>
+
+
+                        <button onclick="openGenerateReportModal()" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <i class="fas fa-plus mr-2"></i> New Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <form method="GET" class="mb-4 flex flex-wrap gap-4 items-end">
+                      <div>
+                        <label class="block text-sm font-medium mb-1">Status</label>
+                        <select name="status" class="border rounded px-3 py-2">
+                          <option value="">All</option>
+                          <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Open</option>
+                          <option value="inprogress" {% if status_filter == 'inrogress' %}selected{% endif %}>In Progress</option>
+                          <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium mb-1">Search</label>
+                        <input type="text" name="school_name" value="{{ school_search }}" class="border rounded px-3 py-2" placeholder="Search by school name, UDISE, etc.">
+                      </div>
+                      <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                        Filter
+                      </button>
+                    </form>
+                </div>
+
+                <!-- Report table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Report List</h3>
+                        <div class="text-sm text-gray-500">{{ total_rows }} Report found</div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 shadow-sm rounded-lg overflow-hidden">
+                          <!-- Table Header -->
+                          <thead class="bg-blue-50">
+                            <tr>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                <input type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                              </th>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Incident ID</th>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">School Details</th>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Equipment</th>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Serial No.</th>
+                              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                            </tr>
+                          </thead>
+
+                          <!-- Table Body -->
+                          <tbody class="bg-white divide-y divide-gray-100">
+                            {% for report in reports %}
+                            <tr class="hover:bg-gray-50">
+                              <td class="px-4 py-3">
+                                <input type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                              </td>
+                              <td class="px-4 py-3 text-sm text-gray-900 font-medium">
+                                {{ report.incident_id }}
+                              </td>
+                              <td class="px-4 py-3 text-sm text-gray-700">
+                                <div class="font-semibold">{{ report.school_name or 'N/A' }}</div>
+                                <div class="text-xs text-gray-500">UDISE: {{ report.school_id }}</div>
+                                <div class="text-xs text-gray-500">Address: {{ report.school_address }}</div>
+                                <div class="text-xs text-gray-500">Contact: {{ report.contact_number }}</div>
+                              </td>
+                              <td class="px-4 py-3 text-sm text-gray-700">
+                                <div>{{ report.equipment_type }}</div>
+                                <div class="text-xs text-gray-500">Brand: {{ report.brand }}</div>
+                                <div class="text-xs text-gray-500">Model: {{ report.model }}</div>
+                              </td>
+                              <td class="px-4 py-3 text-sm text-gray-800">
+                                {{ report.serial_number }}
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold
+                                  {% if report.status == 'Resolved' %} bg-green-100 text-green-800
+                                  {% elif report.status == 'In Progress' %} bg-yellow-100 text-yellow-800
+                                  {% else %} bg-red-100 text-red-800 {% endif %}">
+                                  {{ report.status }}
+                                </span>
+                              </td>
+                              <td class="px-4 py-3 text-right text-sm">
+                                <div class="inline-flex space-x-2 border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
+                                  <!-- View Button -->
+                                  <button class="view-report-btn bg-blue-600 text-white px-3 py-1 rounded" data-report='{{ report|tojson | safe }}'>
+                                      <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% if session.get('role') == 'admin' %}
+                                    <button
+                                      class="edit-report-btn bg-yellow-500 text-white px-3 py-1 rounded"
+                                      data-report='{{ report|tojson | safe }}'
+                                    >
+                                      <i class="fas fa-edit"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200">
+                        <div class="text-sm text-gray-500 mb-2 sm:mb-0">
+
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                          <div class="text-sm text-gray-600">Showing page {{ page }} of {{ total_pages }}</div>
+                          <div class="space-x-2">
+                            {% if page > 1 %}
+                              <a href="?page={{ page - 1 }}&status={{ status_filter }}&school_name={{ school_search }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
+                            {% endif %}
+                            {% if page < total_pages %}
+                              <a href="?page={{ page + 1 }}&status={{ status_filter }}&school_name={{ school_search }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+                            {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+
+
+
+<!-- Generate Report Modal -->
+<div id="generateReportModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center px-4">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 relative">
+
+    <!-- Close Button -->
+    <button onclick="closeGenerateReportModal()" class="absolute top-3 right-4  hover:text-red-500 text-red-500">
+      <i class="fas fa-times-circle text-2xl"></i>
+    </button>
+
+    <h2 class="text-2xl font-semibold mb-6 text-blue-600 flex items-center gap-2">
+      <i class="fas fa-clipboard-list"></i> Generate New Report
+    </h2>
+
+    <form method="POST" action="{{ url_for('add_report') }}">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+        <!-- School UDISE -->
+        <div>
+          <label for="schoolUdise" class="block font-medium mb-1"><i class="fas fa-school mr-1 text-blue-500 mr-2"></i> School UDISE</label>
+          <input list="schools" id="schoolUdise" name="school_id" onchange="populateSchoolDetails()" required
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <datalist id="schools">
+            {% for school in schools %}
+              <option value="{{ school['udise_code'] }}" data-name="{{ school['name'] }}" data-address="{{ school['address'] }}" data-contact="{{ school['contact_number'] }}">
+                {{ school['name'] }} (UDISE: {{ school['udise_code'] }})
+              </option>
+            {% endfor %}
+          </datalist>
+        </div>
+
+        <!-- School Name -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-building mr-1 text-green-500 mr-2"></i> School Name</label>
+          <input type="text" name="school_name" id="schoolName" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- School Address -->
+        <div class="md:col-span-2">
+          <label class="block font-medium mb-1"><i class="fas fa-map-marker-alt mr-1 text-purple-500 mr-2"></i> School Address</label>
+          <input type="text" name="school_address" id="schoolAddress" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Contact Number -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-phone-alt mr-1 text-yellow-500 mr-2"></i> Contact Number</label>
+          <input type="text" name="contact_number" id="contactNumber" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Equipment Type -->
+        <div>
+          <label for="equipment_type" class="block font-medium mb-1"><i class="fas fa-tools text-pink-500 mr-2"></i> Equipment Type</label>
+          <select id="equipment_type" name="equipment_type" onchange="updateEquipmentDetails()"
+            class="w-full border rounded px-3 py-2">
+            <option value="">-- Select Equipment Type --</option>
+            <option value="Monitor">Monitor</option>
+            <option value="Server">Server</option>
+            <option value="Projector">Projector</option>
+            <option value="Printer">Printer</option>
+            <option value="Thinclient">Thinclient</option>
+            <option value="UPS">UPS</option>
+          </select>
+        </div>
+
+        <!-- Brand -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-industry mr-1 text-yellow-500 mr-2"></i> Brand</label>
+          <input type="text" name="brand" id="equipment_brand" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Model -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-tag mr-1 text-pink-500 mr-2"></i> Model</label>
+          <input type="text" name="model" id="equipment_model" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Serial Number -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-barcode mr-1 text-indigo-500 mr-2"></i> Serial Number</label>
+          <input type="text" name="serial_number" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block font-medium mb-1"><i class="fas fa-info-circle text-red-500 mr-2"></i> Status</label>
+          <select name="status" class="w-full border rounded px-3 py-2">
+            <option value="open">Open</option>
+          </select>
+        </div>
+
+        <!-- Issue Description -->
+        <div class="md:col-span-2">
+          <label class="block font-medium mb-1"><i class="fas fa-exclamation-circle  text-red-500 mr-2"></i> Issue Description</label>
+          <textarea name="issue_description" rows="3" class="w-full border rounded px-3 py-2 resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mt-6 text-right">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded shadow">
+          <i class="fas fa-paper-plane mr-2"></i> Submit Report
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- View Report Modal -->
+<div id="viewReportModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center px-4">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6 relative">
+
+    <!-- Close Button -->
+    <button id="closeViewModal" class="absolute top-4 right-4 text-gray-500 hover:text-red-600">
+      <i class="fas fa-times-circle text-2xl"></i>
+    </button>
+
+    <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+      <i class="fas fa-clipboard-list"></i> View Incident Report
+    </h2>
+
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="col-span-2">
+        <p><i class="fas fa-hashtag text-blue-500 mr-2"></i> <strong>Incident ID:</strong> <span id="viewIncidentId"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-school text-green-500 mr-2"></i> <strong>School:</strong> <span id="viewSchool"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-map-marker-alt text-purple-500 mr-2"></i> <strong>Address:</strong> <span id="viewAddress"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-phone-alt text-yellow-500 mr-2"></i> <strong>Contact:</strong> <span id="viewContact"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-tools text-pink-500 mr-2"></i> <strong>Equipment Type:</strong> <span id="viewEquipment"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-tags text-yellow-500 mr-2"></i> <strong>Brand:</strong> <span id="viewBrand"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-cube text-pink-500 mr-2"></i> <strong>Model:</strong> <span id="viewModel"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-barcode text-indigo-500 mr-2"></i> <strong>Serial No:</strong> <span id="viewSerial"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-flag text-red-500 mr-2"></i> <strong>Status:</strong> <span id="viewStatus"></span></p>
+      </div>
+      <div class="col-span-2">
+        <p><i class="fas fa-align-left text-gray-600 mr-2"></i> <strong>Description:</strong> <span id="viewDescription"></span></p>
+      </div>
+    </div>
+    <!-- Download Button -->
+    <div class="mt-6 text-right">
+      <button id="downloadPDF" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow">
+        <i class="fas fa-file-download mr-2"></i> Download PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Edit Report Modal -->
+<div id="editReportModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center px-4">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 relative">
+
+    <!-- Close Button -->
+    <button onclick="closeEditReportModal()" class="absolute top-3 right-4 text-gray-400 hover:text-red-500 focus:outline-none">
+      <i class="fas fa-times-circle text-xl"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <h2 class="text-2xl font-semibold mb-6 text-yellow-600 flex items-center gap-2">
+      <i class="fas fa-edit text-yellow-500"></i> Edit Report
+    </h2>
+
+    <!-- Edit Form -->
+    <form method="POST" action="{{ url_for('edit_report') }}">
+      <input type="hidden" id="edit_incident_id" name="incident_id">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+        <!-- School UDISE -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-school mr-1 text-blue-600"></i> School UDISE
+          </label>
+          <input type="text" id="edit_school_id" name="school_id" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400" readonly>
+        </div>
+
+
+
+        <!-- School Name -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-building mr-1 text-indigo-600"></i> School Name
+          </label>
+          <input type="text" id="edit_school_name" name="school_name" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-400">
+        </div>
+
+        <!-- School Address -->
+        <div class="md:col-span-2">
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-map-marker-alt mr-1 text-red-500"></i> School Address
+          </label>
+          <input type="text" id="edit_school_address" name="school_address" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-red-400">
+        </div>
+
+        <!-- Contact Number -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-phone-alt mr-1 text-green-600"></i> Contact Number
+          </label>
+          <input type="text" id="edit_contact_number" name="contact_number" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400">
+        </div>
+
+        <!-- Equipment Type -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-desktop mr-1 text-purple-600"></i> Equipment Type
+          </label>
+          <select id="edit_equipment_type" name="equipment_type" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-400">
+            <option value="">-- Select --</option>
+            <option value="Monitor">Monitor</option>
+            <option value="Server">Server</option>
+            <option value="Projector">Projector</option>
+            <option value="Printer">Printer</option>
+            <option value="Thinclient">Thinclient</option>
+            <option value="UPS">UPS</option>
+          </select>
+        </div>
+
+        <!-- Brand -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-industry mr-1 text-orange-600"></i> Brand
+          </label>
+          <input type="text" id="edit_brand" name="brand" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-400">
+        </div>
+
+        <!-- Model -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-tag mr-1 text-pink-600"></i> Model
+          </label>
+          <input type="text" id="edit_model" name="model" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-400">
+        </div>
+
+        <!-- Serial Number -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-barcode mr-1 text-cyan-600"></i> Serial Number
+          </label>
+          <input type="text" id="edit_serial_number" name="serial_number" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-cyan-400">
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-tasks mr-1 text-amber-600"></i> Status
+          </label>
+          <select id="edit_status" name="status" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-amber-400">
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+
+        <!-- Issue Description -->
+        <div class="md:col-span-2">
+          <label class="block mb-1 font-medium">
+            <i class="fas fa-exclamation-triangle mr-1 text-red-600"></i> Issue Description
+          </label>
+          <textarea id="edit_description" name="issue_description" rows="3" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-red-300"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mt-6 text-right">
+        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-5 py-2 rounded shadow transition-all duration-200">
+          <i class="fas fa-save mr-2"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<script>
+ function openGenerateReportModal() {
+    document.getElementById("generateReportModal").classList.remove("hidden");
+  }
+
+  function closeGenerateReportModal() {
+    document.getElementById("generateReportModal").classList.add("hidden");
+  }
+
+  $(document).ready(function () {
+    // Update Equipment Details on Change
+    $('#equipment_type').on('change', function () {
+      const selected = $(this).val();
+      const details = equipmentDetails[selected];
+      if (details) {
+        $('#equipment_brand').val(details.brand);
+        $('#equipment_model').val(details.model);
+      } else {
+        $('#equipment_brand').val('');
+        $('#equipment_model').val('');
+      }
+    });
+
+    // Populate School Details on Change
+    $('#school_id').on('input', function () {
+      const inputVal = $(this).val();
+      const selectedOption = $('#schools option').filter(function () {
+        return $(this).val() === inputVal;
+      }).data();
+
+      if (selectedOption) {
+        $('#school_name').val(selectedOption.name || '');
+        $('#school_address').val(selectedOption.address || '');
+        $('#school_contact').val(selectedOption.contact || '');
+      } else {
+        $('#school_name, #school_address, #school_contact').val('');
+      }
+    });
+
+    // Bind Print Button Click
+    $('#printIncidentBtn').on('click', function () {
+      const incidentId = $('#incident_id1').val();
+      const schoolId = $('#school_id1').val();
+      const schoolName = $('#school_name1').val();
+      const schoolAddress = $('#school_address1').val();
+      const schoolContact = $('#school_contact1').val();
+      const equipmentType = $('#equipment_type1').val();
+      const equipmentBrand = $('#equipment_brand1').val();
+      const equipmentModel = $('#equipment_model1').val();
+      const serialNumber = $('#serial_number1').val();
+      const description = $('#description1').val();
+
+      if (incidentId) {
+        const printContent = `
+          <h1>Incident Report</h1>
+          <p><strong>Incident ID:</strong> ${incidentId}</p>
+          <p><strong>School ID:</strong> ${schoolId}</p>
+          <p><strong>School Name:</strong> ${schoolName}</p>
+          <p><strong>Address:</strong> ${schoolAddress}</p>
+          <p><strong>Contact:</strong> ${schoolContact}</p>
+          <p><strong>Equipment Type:</strong> ${equipmentType}</p>
+          <p><strong>Brand:</strong> ${equipmentBrand}</p>
+          <p><strong>Model:</strong> ${equipmentModel}</p>
+          <p><strong>Serial Number:</strong> ${serialNumber}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <p><strong>Status:</strong> Pending</p>
+        `;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Incident</title></head><body>');
+        printWindow.document.write(printContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      } else {
+        alert('No incident ID found. Please submit the form first.');
+      }
+    });
+  });
+
+  const equipmentDetails = {
+    "Monitor": { "brand": "Acer", "model": "V206HQL" },
+    "Server": { "brand": "Acer", "model": "Verton X2680G" },
+    "Projector": { "brand": "Optoma", "model": "X319ST" },
+    "Printer": { "brand": "Brother", "model": "DCP-B7535DW" },
+    "Thinclient": { "brand": "Acer", "model": "E220 VERITON M26X1G" },
+    "UPS": { "brand": "Acer", "model": "MF1103L8" }
+  };
+
+   $(document).ready(function () {
+    $('#schoolUdise').on('input', function () {
+      const udise = $(this).val();
+      const matchedOption = $('#schools option').filter(function () {
+        return $(this).val() === udise;
+      });
+
+      if (matchedOption.length) {
+        $('#schoolName').val(matchedOption.data('name') || '');
+        $('#schoolAddress').val(matchedOption.data('address') || '');
+        $('#contactNumber').val(matchedOption.data('contact') || '');
+      } else {
+        $('#schoolName, #schoolAddress, #contactNumber').val('');
+      }
+    });
+
+
+  });
+
+$(document).ready(function () {
+    $('.view-report-btn').on('click', function () {
+      const report = $(this).data('report');
+
+      $('#viewIncidentId').text(report.incident_id || '');
+      $('#viewSchool').text(`${report.school_name || 'N/A'} (UDISE: ${report.school_id || '-'})`);
+      $('#viewAddress').text(report.school_address || '');
+      $('#viewContact').text(report.contact_number || '');
+      $('#viewEquipment').text(`${report.equipment_type}`);
+      $('#viewBrand').text(`${report.brand}`);
+      $('#viewModel').text(`${report.model}`);
+      $('#viewSerial').text(report.serial_number || '');
+      $('#viewStatus').text(report.status || '');
+      $('#viewDescription').text(report.issue_description || '');
+
+      $('#viewReportModal').removeClass('hidden');
+    });
+
+    $('#closeViewModal').on('click', function () {
+      $('#viewReportModal').addClass('hidden');
+    });
+  });
+
+
+</script>
+
+
+<script>
+  $('#downloadPDF').on('click', function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Constants
+    const left = 20;
+    let y = 20;
+    const lineSpacing = 8;
+
+    // Logo (adjust as per your image base64 or use URL if CORS allows)
+    const imgData = 'data:image/png;base64,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'; // Replace with your logo
+    doc.addImage(imgData, 'PNG', left, 10, 30, 15);
+    y += 20;
+
+    // Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.text('Incident Report', left, y);
+    y += 10;
+
+    doc.setDrawColor(180);
+    doc.line(left, y, 190, y);
+    y += 10;
+
+    // Function to add field
+    const addField = (label, value) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text(`${label}:`, left, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(value || '-', left + 45, y);
+      y += lineSpacing;
+    };
+
+    // Grab values
+    const incidentId = $('#viewIncidentId').text().trim();
+    const school = $('#viewSchool').text().trim();
+    const address = $('#viewAddress').text().trim();
+    const contact = $('#viewContact').text().trim();
+    const equipment = $('#viewEquipment').text().trim();
+    const serial = $('#viewSerial').text().trim();
+    const brand = $('#viewBrand').text().trim();
+    const model = $('#viewModel').text().trim();
+    const status = $('#viewStatus').text().trim();
+    const description = $('#viewDescription').text().trim();
+
+    // Add data fields
+    addField('Incident ID', incidentId);
+    addField('School Name', school);
+    addField('Address', address);
+    addField('Contact Number', contact);
+    addField('Equipment Type', equipment);
+    addField('Brand', brand);
+    addField('Model', model);
+    addField('Serial Number', serial);
+    addField('Status', status);
+
+    // Description section
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('Issue Description:', left, y);
+    y += 6;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    const descLines = doc.splitTextToSize(description || '-', 170); // Wrap text within 170 width
+    doc.text(descLines, left, y);
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, left, 280);
+
+    // Save the PDF
+    doc.save(`Incident_Report_${incidentId || 'Unknown'}.pdf`);
+  });
+
+$(document).ready(function () {
+  $(document).on('click', '.edit-report-btn', function () {
+    const report = $(this).data('report');
+
+    $('#edit_incident_id').val(report.incident_id);
+    $('#edit_school_id').val(report.school_id);
+    $('#edit_school_name').val(report.school_name);
+    $('#edit_school_address').val(report.school_address);
+    $('#edit_contact_number').val(report.contact_number);
+    $('#edit_equipment_type').val(report.equipment_type);
+    $('#edit_brand').val(report.brand);
+    $('#edit_model').val(report.model);
+    $('#edit_serial_number').val(report.serial_number);
+    $('#edit_status').val(report.status);
+    $('#edit_description').val(report.issue_description);
+
+    $('#editReportModal').removeClass('hidden').addClass('flex');
+  });
+});
+
+function closeEditReportModal() {
+  $('#editReportModal').addClass('hidden').removeClass('flex');
+}
+
+</script>
+
+{% endblock %}
+
+
+

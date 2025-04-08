@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Extramarks CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Desktop Sidebar -->
+        <div id="desktop-sidebar" class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-indigo-700 text-white h-full">
+                <div class="flex items-center justify-between h-16 px-4 border-b border-indigo-600">
+                    <h1 class="text-xl font-bold">ExtraMarks CRM</h1>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="{{ url_for('dashboard') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md {% if active_page == 'dashboard' %}bg-indigo-800 text-white{% else %}text-indigo-200 hover:bg-indigo-600 hover:text-white {% endif %}">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="{{ url_for('schools') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md {% if active_page == 'schools' %}bg-indigo-800 text-white{% else %}text-indigo-200 hover:bg-indigo-600 hover:text-white {% endif %}">
+                            <i class="fas fa-users mr-3"></i>
+                            Schools
+                        </a>
+                        {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('users') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md {% if active_page == 'users' %}bg-indigo-800 text-white{% else %}text-indigo-200 hover:bg-indigo-600 hover:text-white {% endif %}">
+                            <i class="fas fa-calendar mr-3"></i>
+                            Users
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('reports') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md {% if active_page == 'reports' %}bg-indigo-800 text-white{% else %}text-indigo-200 hover:bg-indigo-600 hover:text-white {% endif %}">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            Reports
+                        </a>
+                        {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('login_history') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md {% if active_page == 'login-history' %}bg-indigo-800 text-white{% else %}text-indigo-200 hover:bg-indigo-600 hover:text-white {% endif %}">
+                            <i class="fas fa-cog mr-3"></i>
+                            Login History
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-600">
+                    <div class="flex items-center mb-4">
+                        <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User profile">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">{{ session['first_name'] }} {{ session['last_name'] }}</p>
+                            <p class="text-xs font-medium text-indigo-200 capitalize">{{ session['role'] }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" id="logout-btn" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar (hidden by default) -->
+        <div id="mobile-sidebar" class="hidden fixed inset-0 z-40 md:hidden">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true"></div>
+            <div class="relative flex flex-col w-full max-w-xs bg-indigo-700 text-white h-full">
+                <div class="absolute top-0 right-0 -mr-14 p-1">
+                    <button id="close-mobile-sidebar" class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600">
+                        <i class="fas fa-times text-white text-xl"></i>
+                    </button>
+                </div>
+                <div class="flex items-center h-16 px-4 border-b border-indigo-600">
+                    <h1 class="text-xl font-bold">ExtraMarks CRM</h1>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="{{ url_for('dashboard') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md bg-indigo-800 text-white">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="{{ url_for('schools') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                            <i class="fas fa-users mr-3"></i>
+                            Schools
+                        </a>
+                        {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('users') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                            <i class="fas fa-calendar mr-3"></i>
+                            Users
+                        </a>
+                         {% endif %}
+                        <a href="{{ url_for('reports') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            Reports
+                        </a>
+                        {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('login_history') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                            <i class="fas fa-cog mr-3"></i>
+                            Login History
+                        </a>
+                         {% endif %}
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-600">
+                    <div class="flex items-center mb-4">
+                        <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User profile">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">{{ session['first_name'] }} {{ session['last_name'] }}</p>
+                            <p class="text-xs font-medium text-indigo-200 capitalize">{{ session['role'] }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" id="logout-btn-mobile" class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-indigo-200 hover:bg-indigo-600 hover:text-white">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top navigation -->
+            <header class="flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="p-2 mr-2 text-gray-500 rounded-md md:hidden hover:bg-gray-100">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Desktop sidebar toggle -->
+                    <button id="desktop-sidebar-toggle" class="hidden md:block p-2 mr-2 text-gray-500 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-lg font-medium">Dashboard</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                    </div>
+                </div>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="top-2 right-4 z-50 m-2">
+                    <div class="flex items-center p-2
+                                {% if category == 'success' %} bg-green-100 border-green-400 text-green-800
+                                {% else %} bg-red-100 border-red-400 text-red-800 {% endif %}
+                                border rounded-lg shadow-md">
+                      <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} mr-2"></i>
+                      <span>{{ message }}</span>
+                      <button onclick="this.parentElement.parentElement.style.display='none'" class="ml-1 right-8 absolute">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+
+            {% block content %}{% endblock %}
+
+
+
+
+        </div>
+    </div>
+</body>
+<script>
+
+    $(document).ready(function() {
+        // Mobile menu button click - shows sidebar
+        $("#mobile-menu-button").click(function() {
+            $("#mobile-sidebar").removeClass("hidden");
+        });
+
+        // Close button click - hides sidebar
+        $("#close-mobile-sidebar").click(function() {
+            $("#mobile-sidebar").addClass("hidden");
+        });
+
+        // Optional: Desktop sidebar toggle (if needed)
+        $("#desktop-sidebar-toggle").click(function() {
+            $("#desktop-sidebar").toggleClass("hidden fixed inset-0 z-40 md:hidden");
+            $("#desktop-sidebar").toggleClass("hidden md:flex md:flex-shrink-0");
+
+
+        });
+
+
+
+    });
+
+</script>
+</html>

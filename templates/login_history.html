@@ -1,0 +1,62 @@
+{% extends "header.html" %}
+{% block content %}
+
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-4">
+                <div class="p-6">
+                  <h2 class="text-xl font-bold mb-4">Login History</h2>
+
+                  <form method="get" class="mb-4">
+                    <input type="text" name="search" value="{{ search }}" placeholder="Search..." class="border px-4 py-2 rounded w-64" />
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+                  </form>
+
+                  <div class="overflow-auto">
+                    <table class="min-w-full border bg-white shadow-md rounded">
+                      <thead class="bg-gray-100 text-gray-700 text-sm">
+                        <tr>
+                          <th class="px-4 py-2 text-left">Username</th>
+                          <th class="px-4 py-2 text-left">Email</th>
+                          <th class="px-4 py-2 text-left">Phone</th>
+                          <th class="px-4 py-2 text-left">IP Address</th>
+                          <th class="px-4 py-2 text-left">User Agent</th>
+                          <th class="px-4 py-2 text-left">Login Time</th>
+                          <th class="px-4 py-2 text-left">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-sm text-gray-800">
+                        {% for row in history %}
+                        <tr class="border-t">
+                          <td class="px-4 py-2">{{ row.username }}</td>
+                          <td class="px-4 py-2">{{ row.email }}</td>
+                          <td class="px-4 py-2">{{ row.phone }}</td>
+                          <td class="px-4 py-2">{{ row.ip_address }}</td>
+                          <td class="px-4 py-2 truncate max-w-xs">{{ row.user_agent }}</td>
+                          <td class="px-4 py-2">{{ row.login_time }}</td>
+                          <td class="px-4 py-2">
+                            {% if row.success %}
+                              <span class="text-green-600 font-medium">Success</span>
+                            {% else %}
+                              <span class="text-red-600 font-medium">Failed</span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Pagination -->
+                  <div class="mt-4 flex justify-center space-x-2">
+                    {% for p in range(1, total_pages + 1) %}
+                      <a href="?page={{ p }}&search={{ search }}"
+                         class="px-3 py-1 rounded border {{ 'bg-blue-600 text-white' if p == page else 'bg-white text-gray-800' }}">
+                         {{ p }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+            </main>
+
+
+{% endblock %}

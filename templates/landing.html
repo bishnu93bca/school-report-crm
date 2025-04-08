@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythonEverywhere | Cloud Python IDE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        python: {
+                            blue: '#3776AB',
+                            yellow: '#FFD43B',
+                            dark: '#306998',
+                            light: '#FFE873'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(55,118,171,0.1) 0%, rgba(255,212,59,0.1) 100%);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-python-blue" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.885 16.997C15.885 16.997 15.83 24.073 15.83 25.71C15.83 27.346 17.172 28.013 18.514 27.479C19.856 26.945 22.542 24.608 22.542 24.608L16.712 20.335L15.885 16.997Z" fill="#FFD43B"/>
+                            <path d="M16.087 16.908C16.087 16.908 8.977 16.866 7.332 16.908C5.687 16.95 5.006 18.282 5.54 19.624C6.074 20.966 8.399 23.652 8.399 23.652L12.672 17.822L16.087 16.908Z" fill="#FFD43B"/>
+                            <path d="M16.174 15.883C16.174 15.883 16.216 8.807 16.174 7.17C16.132 5.534 14.8 4.853 13.458 5.387C12.116 5.921 9.43 8.246 9.43 8.246L15.26 12.519L16.174 15.883Z" fill="#FFD43B"/>
+                            <path d="M16.262 16.002C16.262 16.002 23.372 16.044 25.017 16.002C26.662 15.96 27.343 14.628 26.809 13.286C26.275 11.944 23.95 9.258 23.95 9.258L19.677 15.088L16.262 16.002Z" fill="#FFD43B"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-python-blue">PythonEverywhere</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#features" class="text-gray-500 hover:text-python-blue px-3 py-2 text-sm font-medium">Features</a>
+                    <a href="#how-it-works" class="text-gray-500 hover:text-python-blue px-3 py-2 text-sm font-medium">How It Works</a>
+                    <a href="#pricing" class="text-gray-500 hover:text-python-blue px-3 py-2 text-sm font-medium">Pricing</a>
+                    <a href="#contact" class="text-gray-500 hover:text-python-blue px-3 py-2 text-sm font-medium">Contact</a>
+                </div>
+                <div class="flex items-center">
+                    <a href="/login" class="text-gray-500 hover:text-python-blue px-3 py-2 text-sm font-medium">Sign In</a>
+                    <a href="/register" class="ml-4 bg-python-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-python-dark transition duration-300">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-gradient">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                    <span class="block text-python-blue">Code Python.</span>
+                    <span class="block text-python-yellow">Anywhere.</span>
+                </h1>
+                <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                    The cloud-based Python IDE that lets you write, run, and deploy Python code from any device with just a browser.
+                </p>
+                <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+                    <div class="rounded-md shadow">
+                        <a href="/register" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-python-blue hover:bg-python-dark md:py-4 md:text-lg md:px-10 transition duration-300">
+                            Start Coding Now
+                        </a>
+                    </div>
+                    <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+                        <a href="#demo" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-python-blue bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition duration-300">
+                            Live Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logo Cloud -->
+    <div class="bg-gray-50 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm font-semibold uppercase text-gray-500 tracking-wide">
+                Trusted by developers at
+            </p>
+            <div class="mt-6 grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
+                <div class="col-span-1 flex justify-center">
+                    <img class="h-12" src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS">
+                </div>
+                <div class="col-span-1 flex justify-center">
+                    <img class="h-12" src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
+                </div>
+                <div class="col-span-1 flex justify-center">
+                    <img class="h-12" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                </div>
+                <div class="col-span-1 flex justify-center">
+                    <img class="h-12" src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM">
+                </div>
+                <div class="col-span-1 flex justify-center">
+                    <img class="h-12" src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-python-blue font-semibold tracking-wide uppercase">Features</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Everything you need to code in Python
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    Powerful features designed to boost your productivity
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                    <!-- Feature 1 -->
+                    <div class="feature-card relative bg-white p-6 rounded-lg shadow-md transition duration-300">
+                        <div>
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-python-blue text-white">
+                                <i class="fas fa-laptop-code text-xl"></i>
+                            </div>
+                            <div class="mt-5">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Browser-Based IDE</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    Full-featured Python editor with syntax highlighting, autocomplete, and debugging - all in your browser.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="feature-card relative bg-white p-6 rounded-lg shadow-md transition duration-300">
+                        <div>
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-python-blue text-white">
+                                <i class="fas fa-cloud text-xl"></i>
+                            </div>
+                            <div class="mt-5">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Cloud Execution</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    Run your code on our cloud servers with multiple Python versions and pre-installed libraries.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="feature-card relative bg-white p-6 rounded-lg shadow-md transition duration-300">
+                        <div>
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-python-blue text-white">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div class="mt-5">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Real-Time Collaboration</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    Work together with teammates in real-time, just like Google Docs but for Python code.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="feature-card relative bg-white p-6 rounded-lg shadow-md transition duration-300">
+                        <div>
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-python-blue text-white">
+                                <i class="fas fa-share-alt text-xl"></i>
+                            </div>
+                            <div class="mt-5">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Easy Sharing</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    Share your code with a link or embed it in your blog or documentation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Section -->
+    <div id="demo" class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-python-blue font-semibold tracking-wide uppercase">Live Demo</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Try it right in your browser
+                </p>
+            </div>
+
+            <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="p-4 bg-gray-800 flex items-center">
+                    <div class="flex space-x-2 mr-4">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="text-sm text-gray-400">demo.py</div>
+                </div>
+                <div class="p-4 bg-gray-900 text-gray-200 font-mono text-sm overflow-x-auto">
+                    <div class="whitespace-pre"><span class="text-purple-400">print</span>(<span class="text-green-400">"Hello, PythonEverywhere!"</span>)</div>
+                    <div class="whitespace-pre"><span class="text-purple-400">def</span> <span class="text-blue-400">calculate</span>(a, b):</div>
+                    <div class="whitespace-pre pl-4"><span class="text-purple-400">return</span> a * b + <span class="text-yellow-400">10</span></div>
+                    <div class="whitespace-pre"><span class="text-purple-400">print</span>(<span class="text-blue-400">calculate</span>(<span class="text-yellow-400">5</span>, <span class="text-yellow-400">3</span>))</div>
+                </div>
+                <div class="p-4 bg-gray-800 border-t border-gray-700">
+                    <button class="bg-python-blue hover:bg-python-dark text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                        Run Code
+                    </button>
+                    <div class="mt-2 text-xs text-gray-400">Output will appear here after execution</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-python-blue">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+            <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                <span class="block">Ready to dive in?</span>
+                <span class="block text-python-yellow">Start coding Python today.</span>
+            </h2>
+            <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+                <div class="inline-flex rounded-md shadow">
+                    <a href="/register" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-python-blue bg-white hover:bg-gray-50 transition duration-300">
+                        Get started
+                    </a>
+                </div>
+                <div class="ml-3 inline-flex rounded-md shadow">
+                    <a href="#demo" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-python-dark hover:bg-opacity-90 transition duration-300">
+                        Live demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800" id="contact">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+            <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                <div class="space-y-8 xl:col-span-1">
+                    <div class="flex items-center">
+                        <svg class="h-8 w-8 text-python-yellow" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.885 16.997C15.885 16.997 15.83 24.073 15.83 25.71C15.83 27.346 17.172 28.013 18.514 27.479C19.856 26.945 22.542 24.608 22.542 24.608L16.712 20.335L15.885 16.997Z" fill="#FFD43B"/>
+                            <path d="M16.087 16.908C16.087 16.908 8.977 16.866 7.332 16.908C5.687 16.95 5.006 18.282 5.54 19.624C6.074 20.966 8.399 23.652 8.399 23.652L12.672 17.822L16.087 16.908Z" fill="#FFD43B"/>
+                            <path d="M16.174 15.883C16.174 15.883 16.216 8.807 16.174 7.17C16.132 5.534 14.8 4.853 13.458 5.387C12.116 5.921 9.43 8.246 9.43 8.246L15.26 12.519L16.174 15.883Z" fill="#FFD43B"/>
+                            <path d="M16.262 16.002C16.262 16.002 23.372 16.044 25.017 16.002C26.662 15.96 27.343 14.628 26.809 13.286C26.275 11.944 23.95 9.258 23.95 9.258L19.677 15.088L16.262 16.002Z" fill="#FFD43B"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-white">PythonEverywhere</span>
+                    </div>
+                    <p class="text-gray-300 text-base">
+                        The cloud-based Python IDE for developers who want to code from anywhere.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-discord text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">
+                                Product
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#features" class="text-base text-gray-400 hover:text-white">
+                                        Features
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#pricing" class="text-base text-gray-400 hover:text-white">
+                                        Pricing
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#demo" class="text-base text-gray-400 hover:text-white">
+                                        Demo
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">
+                                Support
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Documentation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Community
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Contact Us
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">
+                                Company
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        About
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Blog
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Careers
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">
+                                Legal
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Privacy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Terms
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-400 hover:text-white">
+                                        Security
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8">
+                <p class="text-base text-gray-400 text-center">
+                    &copy; 2023 PythonEverywhere. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

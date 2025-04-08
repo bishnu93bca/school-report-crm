@@ -1,0 +1,156 @@
+{% extends "header.html" %}
+{% block content %}
+
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-4">
+                <div class="max-w-7xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-6">Dashboard</h2>
+
+        <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Total Reports -->
+        <div class="bg-blue-500 text-white rounded-2xl shadow-md p-6 flex items-center gap-4">
+            <div class="text-4xl">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-medium">Total Reports</h3>
+                <p class="text-3xl font-bold">{{ total_reports }}</p>
+            </div>
+        </div>
+
+        <!-- Resolved -->
+        <div class="bg-green-500 text-white rounded-2xl shadow-md p-6 flex items-center gap-4">
+            <div class="text-4xl">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-medium">Resolved</h3>
+                <p class="text-3xl font-bold">{{ resolved }}</p>
+            </div>
+        </div>
+
+        <!-- Pending -->
+        <div class="bg-yellow-500 text-white rounded-2xl shadow-md p-6 flex items-center gap-4">
+            <div class="text-4xl">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-medium">Pending</h3>
+                <p class="text-3xl font-bold">{{ pending }}</p>
+            </div>
+        </div>
+    </div>
+    <!-- Equipment Breakdown Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+      <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2 mb-4">
+        <i class="fas fa-tools text-blue-500"></i>
+        Equipment Breakdown Report
+      </h2>
+      <canvas id="equipmentChart" class="w-full h-96"></canvas>
+    </div>
+
+    <!-- School Breakdown Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+      <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2 mb-4">
+        <i class="fas fa-school text-emerald-500"></i>
+        Top Schools by Breakdowns
+      </h2>
+      <canvas id="schoolBreakdownChart" class="w-full h-96"></canvas>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ctx1 = document.getElementById('equipmentChart').getContext('2d');
+    const colors1 = [
+        '#3B82F6', '#6366F1', '#10B981', '#F59E0B', '#EF4444',
+        '#8B5CF6', '#14B8A6', '#EC4899', '#F43F5E', '#22D3EE'
+    ];
+
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: {{ equipment_data | map(attribute='equipment_type') | list | tojson }},
+            datasets: [{
+                label: 'No. of Reports',
+                data: {{ equipment_data | map(attribute='count') | list | tojson }},
+                backgroundColor: colors1.slice(0, {{ equipment_data | length }}),
+                borderRadius: { topLeft: 12, topRight: 12 },
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('schoolBreakdownChart').getContext('2d');
+    const colors2 = [
+        '#F43F5E', '#0EA5E9', '#84CC16', '#F472B6', '#EAB308',
+        '#3B82F6', '#A855F7', '#FB923C'
+    ];
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: {{ school_labels | tojson }},
+            datasets: [{
+                label: 'Breakdowns',
+                data: {{ school_counts | tojson }},
+                backgroundColor: colors2.slice(0, {{ school_counts | length }}),
+                borderRadius: { topLeft: 12, topRight: 12 },
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+});
+</script>
+
+
+    {% if login_history %}
+    <!-- Login History Table -->
+    <div class="bg-white rounded-2xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Recent Login History</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100 text-sm text-gray-600">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Username</th>
+                        <th class="px-4 py-2 text-left">Login Time</th>
+                        <th class="px-4 py-2 text-left">IP Address</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm text-gray-700 divide-y divide-gray-100">
+                    {% for log in login_history %}
+                    <tr>
+                        <td class="px-4 py-2">{{ log.username }}</td>
+                        <td class="px-4 py-2">{{ log.login_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td class="px-4 py-2">{{ log.ip_address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+            </main>
+
+
+{% endblock %}
