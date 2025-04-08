@@ -1,6 +1,17 @@
 # Flask School Report CRM App with MySQL Integration
 
-This is a simple Flask application that demonstrates basic functionalities including:
+![Python](https://img.shields.io/badge/Python-3.9-blue)
+![Flask](https://img.shields.io/badge/Flask-2.0-green)
+![HTML](https://img.shields.io/badge/HTML-5-orange)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.0-blue)
+![Font Awesome](https://img.shields.io/badge/Font%20Awesome-6.0-green)
+![jQuery](https://img.shields.io/badge/jQuery-3.6.0-blue)
+
+
+This is a full-stack School Report CRM built using:
+- **Python** and **Flask** for the backend.
+- **HTML**, **TailwindCSS**, and **Font Awesome** for the frontend.
+- **jQuery** for client-side interactivity.
 - Connecting to a MySQL database.
 - Using Flask routes to handle HTTP requests.
 - Exporting data to Excel.
@@ -13,6 +24,9 @@ This is a simple Flask application that demonstrates basic functionalities inclu
 - **Secure Authentication**: Password hashing using Werkzeug.
 - **Dynamic Web Pages**: Render templates with context variables.
 - **Excel Export**: Generate Excel files with Pandas and XlsxWriter.
+- **Dynamic Reports**: Real-time data filtering and export.
+- **Responsive Design**: Fully responsive UI with TailwindCSS.
+- **Interactive Elements**: Smooth client-side interactions with jQuery.
 
 ---
 
@@ -161,24 +175,6 @@ def utility_processor():
 
 This project is licensed under the MIT License. Feel free to use and modify it as needed.
 
-# School Report CRM
 
-![Python](https://img.shields.io/badge/Python-3.9-blue)
-![Flask](https://img.shields.io/badge/Flask-2.0-green)
-![HTML](https://img.shields.io/badge/HTML-5-orange)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.0-blue)
-![Font Awesome](https://img.shields.io/badge/Font%20Awesome-6.0-green)
-![jQuery](https://img.shields.io/badge/jQuery-3.6.0-blue)
-
-This is a full-stack School Report CRM built using:
-- **Python** and **Flask** for the backend.
-- **HTML**, **TailwindCSS**, and **Font Awesome** for the frontend.
-- **jQuery** for client-side interactivity.
-
-## Features
-
-- **Dynamic Reports**: Real-time data filtering and export.
-- **Responsive Design**: Fully responsive UI with TailwindCSS.
-- **Interactive Elements**: Smooth client-side interactions with jQuery.
 
 
