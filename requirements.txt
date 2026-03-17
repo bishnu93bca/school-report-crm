@@ -1,3 +1,6 @@
-flask
-mysql-connector-python
-pandas
+flask==2.3.3
+mysql-connector-python==8.0.33
+pandas==2.0.3
+xlsxwriter==3.1.2
+Werkzeug==2.3.7
+openpyxl==3.1.2
